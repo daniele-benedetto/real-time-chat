@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
+    "@socket.io/redis-adapter": "^8.2.1",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^4.12.0",
     "react-redux": "^9.0.4",
-    "redis": "^4.6.12"
+    "redis": "^4.6.12",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
   },
   "devDependencies": {
     "@types/node": "^20",

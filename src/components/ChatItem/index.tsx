@@ -12,7 +12,7 @@ export default function ChatItem({message, id}:Props) {
       <span className={`w-6 h-6 absolute top-1/2 -translate-y-1/2  rotate-45 ${message.user_id == id ? 'bg-indigo-200 right-0 translate-x-1/2' : 'bg-indigo-100 left-0 -translate-x-1/2'}`}/>
       <div className="flex flex-col">
         <h5 className="font-bold">{message.name}</h5>
-        <p className="text-md">{message.content}</p>
+        <p className="text-md break-all">{message.content}</p>
       </div>
       <div className="flex justify-end">
         <span className="text-xs">{message.time}</span>

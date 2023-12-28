@@ -8,7 +8,6 @@ import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { redirect } from 'next/navigation'
 import { setUser } from '@/redux/features/user/userSlice'
 import Loader from '../Loader'
-
 interface Props {
   messages: Message[]
 }
@@ -30,14 +29,14 @@ export default function Chat({
       dispatch(setUser(localUser))
     }
 
+    setLoading(false)
+  }, [dispatch]);
+
+  useEffect(() => {
     if (chatContainerRef.current) {
       (chatContainerRef.current as HTMLElement).scrollTop = (chatContainerRef.current as HTMLElement).scrollHeight;
     }
-
-    setTimeout(() => {
-      setLoading(false)
-    }, 100)
-  }, [dispatch]);
+  }, [messages, loading])
 
   return (
     <section className="w-full h-[calc(100vh-80px)] md:h-[calc(100vh-120px)] md:p-5 md:pt-0 md:w-3/4">

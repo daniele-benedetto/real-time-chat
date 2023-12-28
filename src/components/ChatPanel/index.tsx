@@ -20,6 +20,10 @@ export default function ChatPanel({id}: Props) {
     if (result?.error) {
       setError(result.error)
     }
+
+    if(result?.success) {
+      setError(null)
+    }
   }
 
   return(

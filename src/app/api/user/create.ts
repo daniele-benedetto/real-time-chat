@@ -1,11 +1,21 @@
 'use server'
 
 import { client } from "@/lib/redis"
+import generateRandomBackgroundAndColor from "@/utils/randomColor"
+
+const connectToRedis = async () => {
+  if (!client.isOpen) {
+    await client.connect();
+  }
+};
 
 export async function createUser(formData: Iterable<readonly [PropertyKey, any]>) {
+  await connectToRedis();
+  
   const { name } = Object.fromEntries(formData)
 
   const id = Math.floor(Math.random() * 100000)
+  const { backgroundColor, textColor } = generateRandomBackgroundAndColor()
 
   const unique = await client.zAdd('users', {
     value: name,
@@ -18,14 +28,18 @@ export async function createUser(formData: Iterable<readonly [PropertyKey, any]>
   
   await client.hSet(`users:${id}`, {
     name,
-    id
+    id,
+    backgroundColor,
+    textColor
   })
 
   return {
     success: true,
     user: {
       name,
-      id
+      id,
+      backgroundColor,
+      textColor
     }
   }
 }

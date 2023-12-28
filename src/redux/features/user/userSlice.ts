@@ -4,11 +4,15 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 export interface UserState {
   id: number,
   name: string,
+  backgroundColor: string,
+  textColor: string,
 }
 
 const initialState: UserState = {
   id: 0,
   name: '',
+  backgroundColor: '',
+  textColor: '',
 }
 
 export const userSlice = createSlice({
@@ -18,6 +22,8 @@ export const userSlice = createSlice({
       setUser: (state, action: PayloadAction<UserState>) => {
         state.id = action.payload.id
         state.name = action.payload.name
+        state.backgroundColor = action.payload.backgroundColor
+        state.textColor = action.payload.textColor
       },
     },
 })

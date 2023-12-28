@@ -2,9 +2,17 @@
 
 import { client } from "@/lib/redis";
 
-const getUser = async (id: string) => {
-  const user = await client.hGetAll(`users:${id}`)
-  return Object.assign({}, user)
-}
+const connectToRedis = async () => {
+  if (!client.isOpen) {
+    await client.connect();
+  }
+};
 
-export default getUser
+const getUser = async (id: string) => {
+  await connectToRedis();
+
+  const user = await client.hGetAll(`users:${id}`);
+  return Object.assign({}, user);
+};
+
+export default getUser;

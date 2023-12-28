@@ -1,15 +1,12 @@
 'use client'
 
-import generateRandomBackgroundAndColor from "@/utils/randomColor"
-
 interface Props {
-  name: string
+  name: string,
+  backgroundColor: string,
+  textColor: string
 }
 
-export default function Avatar({ name }:Props) {
-
-  const { backgroundColor, textColor } = generateRandomBackgroundAndColor()
-
+export default function Avatar({ name, backgroundColor, textColor }:Props) {
   return (
     <span 
       className="w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-md text-md"
@@ -18,7 +15,7 @@ export default function Avatar({ name }:Props) {
         color: textColor
       }}
     >
-      {name[0].trim().toUpperCase()}
+      {name && name.trim()[0].toUpperCase()}
     </span>
   )
 

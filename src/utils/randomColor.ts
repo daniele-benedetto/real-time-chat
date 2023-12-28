@@ -1,6 +1,14 @@
-const randomColor = () => {  
-  const random = Math.floor(Math.random() * 16777215).toString(16)
-    return `#${random}`
+function randomColor(): string {
+  const characters = '0123456789ABCDEF'
+  const length = 6
+  let hexCode = '#'
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length)
+    hexCode += characters.charAt(randomIndex)
+  }
+
+  return hexCode
 }
 
 const getTextColorClass = (backgroundColor:string) => {
