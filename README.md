@@ -9,7 +9,7 @@ Real time chat è un'applicazione web che permette di chattare in tempo reale co
 L'applicazione è stata sviluppata utilizzando Next.js 14, Redux Toolkit, Socket.io, Redis, Tailwind CSS e TypeScript.
 
 ## Requisiti
-Hai bisogno di database Redis per memorizzare i messaggi e le informazioni degli utenti. Vedi [redis.io](https://redis.io/) per maggiori informazioni.  
+Hai bisogno di un database Redis per memorizzare i messaggi e le informazioni degli utenti. Vedi [redis.io](https://redis.io/) per maggiori informazioni.  
 
 ## Installazione
 
@@ -35,10 +35,6 @@ Assicurati di avere Node.js e npm installati sul tuo sistema.
     REDIS_PASSWORD=redis-password
     JWT_SECRET=jwt-secret
     ```
-
-## Configurazione
-
-Spiega come configurare il progetto o le variabili d'ambiente, se necessario.
 
 ## Comandi
 
