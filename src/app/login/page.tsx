@@ -13,7 +13,7 @@ export default async function Login() {
         <h1 className="text-white text-3xl font-bold">Login at real time chat</h1>
       </div>
       <LoginForm />
-      <p className="text-white mt-5">Don&apost have an account? <Link href="/register" className="underline">Register</Link></p>
+      <p className="text-white mt-5">Don&apos;t have an account? <Link href="/register" className="underline">Register</Link></p>
     </main>
   )
 }
