@@ -23,12 +23,12 @@ io.on('connection', (socket) => {
     io.emit('connected', usersOnline)
   })
 
-  socket.on('disconnect', () => {
+  socket.on('disconnected', () => {
+    console.log('disconnected', usersOnline)
     const user = usersOnline.find(u => u.socketId == socket.id)
+    console.log('disconnected', user, socket.id)
     if (user) {
-      console.log('user PRE disconnected', usersOnline);
       usersOnline.splice(usersOnline.indexOf(user), 1)
-      console.log('user disconnected', usersOnline)
       io.emit('disconnected', usersOnline)
     }
   })

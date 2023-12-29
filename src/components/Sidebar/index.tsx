@@ -5,15 +5,10 @@ import SidebarItem from "../SidebarItem"
 import { RootState } from "@/redux/store"
 import User from "@/models/User"
 import { useEffect, useState } from "react"
-import { io } from "socket.io-client"
-
+import socket from "@/lib/socket"
 interface Props {
   users: User[]
 }
-
-const socket = io('http://localhost:3001', {
-  transports: ['websocket', 'polling'],
-})
 
 export default function Sidebar({users}:Props) {
 
@@ -38,7 +33,6 @@ export default function Sidebar({users}:Props) {
     })
 
     socket.on('disconnected', (usersOnline:User[]) => {
-      console.log(usersOnline)
       const updatedUsers = users.map(user => {
         usersOnline.map((userOnline: User) => {
           if(user.id == userOnline.id) {
@@ -58,7 +52,6 @@ export default function Sidebar({users}:Props) {
 
   useEffect(() => {
     window.addEventListener('beforeunload', () => {
-      console.log('log')
       socket.emit('disconnected', user)
     })
   }, [user])

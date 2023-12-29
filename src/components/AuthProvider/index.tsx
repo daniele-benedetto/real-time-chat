@@ -1,18 +1,17 @@
 'use client'
 
 import React, { useEffect, useState } from "react"
-import { useAppSelector } from "@/redux/hooks"
 import { useRouter } from "next/navigation"
 import checkUser  from "@/app/api/auth/check"
+import Loader from "../Loader"
 
-//Types
 type Props = {
     children: React.ReactNode
 }
 
 const AuthorizationProvider = ({ 
     children 
-}: Props) => {
+}: Props): React.ReactElement | null => {
 
     const router = useRouter()
     const loginRedirectPath = '/login'
@@ -37,13 +36,9 @@ const AuthorizationProvider = ({
         checkUserAuth()
     }, [])
 
-    if(isAuthorized === null) {
-        return null
-    }
+    if(isAuthorized === null) return <Loader />
 
-    if(isAuthorized === false) {
-        router.push(loginRedirectPath)
-    }
+    if(isAuthorized === false) router.push(loginRedirectPath)
 
     return (
         <>

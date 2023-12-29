@@ -4,7 +4,7 @@ import { client } from "@/lib/redis"
 
 const connectToRedis = async () => {
     if (!client.isOpen) {
-      await client.connect();
+      await client.connect()
     }
   }
 
@@ -18,7 +18,7 @@ const getUsers = async () => {
       return Object.assign({}, user)
     }))
     
-    return users;
+    return users
   }
   
   export default getUsers

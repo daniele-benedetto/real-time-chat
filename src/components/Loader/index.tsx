@@ -1,4 +1,4 @@
-import { BiLoaderAlt } from 'react-icons/bi';
+import { BiLoaderAlt } from 'react-icons/bi'
 
 export default function Loader() {
     return(
@@ -7,5 +7,5 @@ export default function Loader() {
             <BiLoaderAlt color={'white'} size={100} />
         </div>
       </div>
-    );
+    )
 }

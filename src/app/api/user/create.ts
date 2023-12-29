@@ -65,8 +65,6 @@ export async function createUser(data: {
     token
   })
 
-  console.log(token)
-
   return {
     success: true,
     user: {

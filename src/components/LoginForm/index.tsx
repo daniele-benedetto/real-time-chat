@@ -48,8 +48,23 @@ export default function LoginForm() {
     
 
     if(result?.success) {
-      dispatch(setUser(result.user))
-      localStorage.setItem('user', JSON.stringify(result.user))
+
+      dispatch(setUser({
+        name: result.user.name,
+        backgroundColor: result.user.backgroundColor,
+        textColor: result.user.textColor,
+        id: Number(result.user.id),
+        token: result.user.token,
+      }))
+
+      localStorage.setItem('user', JSON.stringify({
+        name: result.user.name,
+        backgroundColor: result.user.backgroundColor,
+        textColor: result.user.textColor,
+        id: result.user.id,
+        token: result.user.token,
+      }))
+
       redirect('/')
     } else {
       return setError('Oops! Something went wrong. Please try again.')
@@ -64,7 +79,7 @@ export default function LoginForm() {
         placeholder="name" 
         className={
           `border border-gray-300 rounded-md p-2 mb-5 mt-5 
-          ${error ? 'border-red-500 input-error-anim' : ''}`
+          ${error && !name ? 'border-red-500 input-error-anim' : ''}`
         }
         onChange={(e) => handleChangeName(e)} 
       />
@@ -72,13 +87,16 @@ export default function LoginForm() {
         type="password" 
         name="password" 
         placeholder="password" 
-        className="border border-gray-300 rounded-md p-2 mb-5" 
+        className={
+          `border border-gray-300 rounded-md p-2 mb-5 
+          ${error && !password ? 'border-red-500 input-error-anim' : ''}`
+        }
         onChange={(e) => setPassword(e.target.value)}
       />
       <button type="submit" className="bg-indigo-500 text-white rounded-md p-2" disabled={loading}>
         {loading ? 'Loading...' : 'Login'}
       </button>
-      <small className="text-red-500 h-4">{error}</small>
+      <small className="text-red-500 h-4 text-center w-full">{error}</small>
     </form>
   )
 }

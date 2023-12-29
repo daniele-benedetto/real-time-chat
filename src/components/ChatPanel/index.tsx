@@ -2,13 +2,10 @@
 
 import { MdOutlineSend } from "react-icons/md"
 import { createMessage } from "@/app/api/message/create"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { io } from "socket.io-client"
 import formattedDate from "@/utils/formatDate"
-
-const socket = io('http://localhost:3001', {
-  transports: ['websocket', 'polling'],
-});
+import socket from "@/lib/socket"
 
 interface Props {
   id: number,
@@ -36,8 +33,8 @@ export default function ChatPanel({id, name}: Props) {
     socket.emit('chat message', data)
     const result = await createMessage(Object.entries(data))
 
-    if (result?.error) {
-      setError(result.error)
+    if (!result?.success) {
+      setError('Something went wrong. Please try again.')
     }
 
     if(result?.success) {
@@ -45,20 +42,9 @@ export default function ChatPanel({id, name}: Props) {
     }
   }
 
-  useEffect(() => { 
-
-    socket.on('connect', () => {
-        console.log('Connesso al server Socket.IO');
-    });
-
-    // Ricevi messaggi dal server
-    socket.on('newMessage', (message) => {
-        console.log('Messaggio ricevuto:', message);
-    });
-  }, [])
-
   return(
     <div className="flex flex-row items-center justify-between p-5">
+      {error && <small className="text-red-500 input-error-anim">{error}</small>}
       <input 
         type="text" className="w-full border border-gray-300 rounded-md p-3 roudend-md" 
         placeholder="Type a message..." 

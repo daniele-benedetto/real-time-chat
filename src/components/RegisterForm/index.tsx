@@ -6,7 +6,7 @@ import { useAppDispatch } from '@/redux/hooks'
 import { setUser } from '@/redux/features/user/userSlice'
 import { redirect } from 'next/navigation'
 import generateRandomBackgroundAndColor from '@/utils/randomColor'
-import User from '@/models/User'
+import { passwordRegex } from '@/utils/regex'
 
 export default function RegisterForm() {
   const dispatch = useAppDispatch()
@@ -21,9 +21,17 @@ export default function RegisterForm() {
     setName(e.target.value)
   }
 
-  async function handleSubmit() {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+  function handleChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
+    setError('')
+    setPassword(e.target.value)
+  }
 
+  function handleChangeConfirmPassword(e: React.ChangeEvent<HTMLInputElement>) {
+    setError('')
+    setConfirmPassword(e.target.value)
+  }
+
+  async function handleSubmit() {
     setLoading(true)
 
     if(!name) {
@@ -34,6 +42,11 @@ export default function RegisterForm() {
     if(!password) {
       setLoading(false)
       return setError('Please enter a password.')
+    }
+
+    if(!confirmPassword) {
+      setLoading(false)
+      return setError('Please enter a confirm password.')
     }
 
     if(!passwordRegex.test(password)) {
@@ -87,28 +100,34 @@ export default function RegisterForm() {
         placeholder="name" 
         className={
           `border border-gray-300 rounded-md p-2 mb-5 mt-5 
-          ${error ? 'border-red-500 input-error-anim' : ''}`
+          ${error && !name ? 'border-red-500 input-error-anim' : ''}`
         }
-        onChange={(e) => handleChangeName(e)} 
+        onChange={(e) => handleChangeName(e)}
       />
       <input 
         type="password" 
         name="password" 
         placeholder="password" 
-        className="border border-gray-300 rounded-md p-2 mb-5" 
-        onChange={(e) => setPassword(e.target.value)}
+        className={
+          `border border-gray-300 rounded-md p-2 mb-5 
+          ${error && !password ? 'border-red-500 input-error-anim' : ''}`
+        }
+        onChange={(e) => handleChangePassword(e)}
       />
       <input 
         type="password" 
         name="confirmPassword" 
         placeholder="confirm password" 
-        className="border border-gray-300 rounded-md p-2 mb-5" 
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        className={
+          `border border-gray-300 rounded-md p-2 mb-5 
+          ${error && !confirmPassword ? 'border-red-500 input-error-anim' : ''}`
+        }
+        onChange={(e) => handleChangeConfirmPassword(e)}
       />
       <button type="submit" className="bg-indigo-500 text-white rounded-md p-2" disabled={loading}>
         {loading ? 'Loading...' : 'Register'}
       </button>
-      <small className="text-red-500 h-4">{error}</small>
+      <small className="text-red-500 h-8">{error}</small>
     </form>
   )
 }

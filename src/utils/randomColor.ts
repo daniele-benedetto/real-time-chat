@@ -17,7 +17,7 @@ const getTextColorClass = (backgroundColor:string) => {
   const b = parseInt(backgroundColor.slice(5, 7), 16)
   const yiq = (r * 299 + g * 587 + b * 114) / 1000
 
-  return yiq >= 128 ? '#000' : '#fff';
+  return yiq >= 128 ? '#000' : '#fff'
 }
 
 const generateRandomBackgroundAndColor = () => {

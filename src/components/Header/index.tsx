@@ -7,6 +7,8 @@ import { setSidebar } from "@/redux/features/sidebar/sidebarSlice"
 import { useAppDispatch, useAppSelector } from "@/redux/hooks"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { MdLogout } from "react-icons/md"
+import socket from "@/lib/socket"
 
 export default function Header() {
 
@@ -32,15 +34,17 @@ export default function Header() {
         </div>
         {logoutMenu && (
           <div 
-            className="absolute top-14 right-4 bg-white w-48 shadow-lg p-5 rounded-md" 
+            className="absolute top-14 right-4 bg-white w-48 shadow-lg rounded-md" 
             onMouseLeave={() => setLogoutMenu(false)} 
             onMouseEnter={() => setLogoutMenu(true)}
           >
-            <button className="flex items-center" onClick={() => {
+            <button className="flex items-center w-full border justify-between p-5" onClick={() => {
               localStorage.removeItem('user')
+              socket.emit('disconnected', user)
               router.push('/login')
             }}>
-              <span className="mr-2">Logout</span>
+              <span>Logout</span>
+              <MdLogout size={24} />
             </button>
           </div>
         )}

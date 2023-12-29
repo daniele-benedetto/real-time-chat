@@ -8,11 +8,7 @@ import { useAppSelector, useAppDispatch } from '@/redux/hooks'
 import { redirect } from 'next/navigation'
 import { setUser } from '@/redux/features/user/userSlice'
 import Loader from '../Loader'
-import { io } from 'socket.io-client'
-
-const socket = io('http://localhost:3001', {
-  transports: ['websocket', 'polling'],
-})
+import socket from "@/lib/socket"
 
 interface Props {
   messages: Message[]
