@@ -38,7 +38,7 @@ export default function Header() {
           >
             <button className="flex items-center" onClick={() => {
               localStorage.removeItem('user')
-              router.push('/register')
+              router.push('/login')
             }}>
               <span className="mr-2">Logout</span>
             </button>

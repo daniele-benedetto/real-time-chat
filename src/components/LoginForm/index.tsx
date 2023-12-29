@@ -1,19 +1,16 @@
 'use client'
 
-import { createUser } from '@/app/api/user/create'
+import { loginUser } from '@/app/api/user/login'
 import { useState } from 'react'
 import { useAppDispatch } from '@/redux/hooks'
 import { setUser } from '@/redux/features/user/userSlice'
 import { redirect } from 'next/navigation'
-import generateRandomBackgroundAndColor from '@/utils/randomColor'
-import User from '@/models/User'
 
-export default function RegisterForm() {
+export default function LoginForm() {
   const dispatch = useAppDispatch()
   const [error, setError] = useState('')
   const [name, setName] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
   function handleChangeName(e: React.ChangeEvent<HTMLInputElement>) {
@@ -22,8 +19,6 @@ export default function RegisterForm() {
   }
 
   async function handleSubmit() {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
-
     setLoading(true)
 
     if(!name) {
@@ -36,39 +31,21 @@ export default function RegisterForm() {
       return setError('Please enter a password.')
     }
 
-    if(!passwordRegex.test(password)) {
-      setLoading(false)
-      return setError('Password must have 8 characters, at least 1 uppercase letter, 1 lowercase letter and 1 number.')
-    }
-
-    if(password !== confirmPassword) {
-      setLoading(false)
-      return setError('Passwords do not match.')
-    }
-
-    const id = Math.floor(Math.random() * 100000)
-    const { backgroundColor, textColor } = generateRandomBackgroundAndColor()
-
     const data: {
       name: string,
       password: string,
-      id: number,
-      backgroundColor: string,
-      textColor: string,
     } = {
       name,
       password,
-      id,
-      backgroundColor,
-      textColor,
     }
 
-    const result = await createUser(data)
+    const result = await loginUser(data)
 
     if (result?.error) {
       setLoading(false)
       return setError(result.error)
     }
+    
 
     if(result?.success) {
       dispatch(setUser(result.user))
@@ -98,15 +75,8 @@ export default function RegisterForm() {
         className="border border-gray-300 rounded-md p-2 mb-5" 
         onChange={(e) => setPassword(e.target.value)}
       />
-      <input 
-        type="password" 
-        name="confirmPassword" 
-        placeholder="confirm password" 
-        className="border border-gray-300 rounded-md p-2 mb-5" 
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
       <button type="submit" className="bg-indigo-500 text-white rounded-md p-2" disabled={loading}>
-        {loading ? 'Loading...' : 'Register'}
+        {loading ? 'Loading...' : 'Login'}
       </button>
       <small className="text-red-500 h-4">{error}</small>
     </form>

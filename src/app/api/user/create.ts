@@ -1,21 +1,32 @@
 'use server'
 
 import { client } from "@/lib/redis"
-import generateRandomBackgroundAndColor from "@/utils/randomColor"
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+
 
 const connectToRedis = async () => {
   if (!client.isOpen) {
-    await client.connect();
+    await client.connect()
   }
-};
+}
 
-export async function createUser(formData: Iterable<readonly [PropertyKey, any]>) {
-  await connectToRedis();
+export async function createUser(data: {
+  name: string,
+  id: number,
+  password: string,
+  backgroundColor: string,
+  textColor: string
+}) {
+  await connectToRedis()
   
-  const { name } = Object.fromEntries(formData)
-
-  const id = Math.floor(Math.random() * 100000)
-  const { backgroundColor, textColor } = generateRandomBackgroundAndColor()
+  const { 
+    name,
+    id,
+    password,
+    backgroundColor,
+    textColor
+  } = data
 
   const unique = await client.zAdd('users', {
     value: name,
@@ -23,15 +34,38 @@ export async function createUser(formData: Iterable<readonly [PropertyKey, any]>
   }, { NX: true })
 
   if (!unique) {
-    return {error: 'User already exists'}
+    return { error: 'User already exists' }
   }
-  
+
+  const hashedPassword = await bcrypt.hash(password, 10)
+
   await client.hSet(`users:${id}`, {
     name,
     id,
     backgroundColor,
-    textColor
+    textColor,
+    password: hashedPassword,
   })
+
+  const token = jwt.sign(
+    {
+      name,
+      id,
+    },
+    process.env.JWT_SECRET || 'secret',
+    { expiresIn: '24h' }
+  )
+
+  await client.zAdd('tokens', {
+    value: token,
+    score: id
+  })
+
+  await client.hSet(`tokens:${id}`, {
+    token
+  })
+
+  console.log(token)
 
   return {
     success: true,
@@ -39,7 +73,8 @@ export async function createUser(formData: Iterable<readonly [PropertyKey, any]>
       name,
       id,
       backgroundColor,
-      textColor
-    }
+      textColor,
+      token
+    },
   }
 }

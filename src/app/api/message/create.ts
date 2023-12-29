@@ -1,24 +1,25 @@
 'use server'
 
 import { client } from "@/lib/redis"
-import formattedDate from "@/utils/formatDate"
 
 const connectToRedis = async () => {
   if (!client.isOpen) {
-    await client.connect();
+    await client.connect()
   }
-};
+}
 
-export async function createMessage(formData: Iterable<readonly [PropertyKey, any]>) {
-  await connectToRedis();
+export async function createMessage(data: Iterable<readonly [PropertyKey, any]>) {
+  await connectToRedis()
 
-  const { content, user_id } = Object.fromEntries(formData)
-
-  const id = Math.floor(Math.random() * 100000)
-  const time = formattedDate(new Date())
+  const { 
+    content, 
+    user_id, 
+    id, 
+    time 
+  } = Object.fromEntries(data)
 
   await client.zAdd('messages', {
-    value: content,
+    value: id.toString(),
     score: id
   }, { NX: true })
   
@@ -37,7 +38,7 @@ export async function createMessage(formData: Iterable<readonly [PropertyKey, an
   })
     
   client.publish("chat-messages", message)
-
+  
   return {
     success: true,
     message: {

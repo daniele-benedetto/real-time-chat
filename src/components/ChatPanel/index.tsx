@@ -2,20 +2,39 @@
 
 import { MdOutlineSend } from "react-icons/md"
 import { createMessage } from "@/app/api/message/create"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client"
+import formattedDate from "@/utils/formatDate"
+
+const socket = io('http://localhost:3001', {
+  transports: ['websocket', 'polling'],
+});
 
 interface Props {
-  id: number
+  id: number,
+  name: string
 }
 
-export default function ChatPanel({id}: Props) {
+export default function ChatPanel({id, name}: Props) {
 
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string>('')
 
   const handleSubmit = async (formData: {user_id: number, content: string}) => {
     if(!formData.content) return
-    const result = await createMessage(Object.entries(formData));
+
+    const id = Math.floor(Math.random() * 100000)
+    const time = formattedDate(new Date())
+
+    const data = {
+      ...formData,
+      id,
+      time,
+      name
+    }
+
+    socket.emit('chat message', data)
+    const result = await createMessage(Object.entries(data))
 
     if (result?.error) {
       setError(result.error)
@@ -25,6 +44,18 @@ export default function ChatPanel({id}: Props) {
       setError(null)
     }
   }
+
+  useEffect(() => { 
+
+    socket.on('connect', () => {
+        console.log('Connesso al server Socket.IO');
+    });
+
+    // Ricevi messaggi dal server
+    socket.on('newMessage', (message) => {
+        console.log('Messaggio ricevuto:', message);
+    });
+  }, [])
 
   return(
     <div className="flex flex-row items-center justify-between p-5">

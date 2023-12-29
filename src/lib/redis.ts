@@ -1,5 +1,4 @@
 import { createClient } from 'redis'
-import { Server } from 'socket.io'
 
 const client = createClient({
   password: process.env.REDIS_PASSWORD,
@@ -9,21 +8,10 @@ const client = createClient({
   }
 })
 
-const io = new Server()
+client.on('error', err => console.log(err))
 
-io.on('connection', (socket) => {
-  client.subscribe('chat-messages', (channel, message) => {
-    io.emit('chat-messages', message);
-  });
-
-  socket.on('disconnect', () => {
-    client.unsubscribe('chat-messages');
-  });
-});
-
-const attachSocketToServer = () => {
-  const server = require('http').createServer()
-  io.attach(server)
+if (!client.isOpen) {
+  client.connect()
 }
 
-export { client, attachSocketToServer }
+export { client }
